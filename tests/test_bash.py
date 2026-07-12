@@ -1,4 +1,5 @@
 # ruff: noqa: S404, S603, PLW1510, PLC1901 — tests for the subprocess wrapper
+import os
 import subprocess
 import sys
 import tempfile
@@ -154,3 +155,21 @@ class TestBashHandoff:
                 text=True,
             )
             assert tmpdir in result.stdout
+
+
+class TestEnv:
+    def test_env_var_reaches_child(self):
+        assert bash_output("printenv OVERLAY_VAR", env={"OVERLAY_VAR": "hello"}) == "hello\n"
+
+    def test_env_overlays_rather_than_replaces(self, monkeypatch: pytest.MonkeyPatch):
+        # an inherited var stays visible alongside the caller's overlay
+        monkeypatch.setenv("INHERITED_VAR", "base")
+        assert bash_output("printenv INHERITED_VAR", env={"OTHER_VAR": "x"}) == "base\n"
+
+    def test_env_does_not_mutate_parent_environ(self):
+        bash_output("true", env={"SHOULD_NOT_LEAK": "1"})
+        assert "SHOULD_NOT_LEAK" not in os.environ
+
+    def test_env_overrides_inherited_value(self, monkeypatch: pytest.MonkeyPatch):
+        monkeypatch.setenv("COLLIDE_VAR", "old")
+        assert bash_output("printenv COLLIDE_VAR", env={"COLLIDE_VAR": "new"}) == "new\n"
