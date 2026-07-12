@@ -21,6 +21,7 @@ bash("docker compose up -d")  # streams to stdout/stderr; raises on failure
 text = bash_output("git rev-parse HEAD")  # captures stdout; raises on failure
 if bash_check("test -f .env"):  # silent boolean; never raises
     ...
+bash("make", env={"CC": "clang"})  # env overlays the inherited environment for this child only
 ```
 
 ## Consuming from another repo
