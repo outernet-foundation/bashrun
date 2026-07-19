@@ -11,10 +11,18 @@ from subprocess import CalledProcessError, Popen, TimeoutExpired
 from typing import NoReturn
 
 
-def _check_no_pipe(command: str) -> None:
+_SHELL_OPERATOR_PATTERN = re.compile(r"[|;&<>`]")
+
+
+def _check_no_shell_operator(command: str) -> None:
     stripped = re.sub(r'"[^"]*"', "", re.sub(r"'[^']*'", "", command))
-    if "|" in stripped:
-        msg = f"Command contains a pipe: {command!r}. Use bash_pipe() instead."
+    match = _SHELL_OPERATOR_PATTERN.search(stripped)
+    if match is not None:
+        msg = (
+            f"Command contains shell operator {match.group()!r}: {command!r}. "
+            "bash() runs without a shell, so the operator would be passed as a literal argument. "
+            "Split into separate bash() calls, or use bash_pipe() for pipelines."
+        )
         raise ValueError(msg)
 
 
@@ -38,7 +46,7 @@ def _merge_env(env: dict[str, str] | None) -> dict[str, str] | None:
 def bash_output(
     command: str, *, cwd: Path | None = None, stdin_text: str | None = None, env: dict[str, str] | None = None
 ) -> str:
-    _check_no_pipe(command)
+    _check_no_shell_operator(command)
     args = _resolve_args(command)
 
     with Popen(
@@ -75,7 +83,7 @@ def bash(
     log_path: Path | None = None,
     env: dict[str, str] | None = None,
 ) -> None:
-    _check_no_pipe(command)
+    _check_no_shell_operator(command)
     args = _resolve_args(command)
 
     with ExitStack() as stack:
@@ -146,26 +154,27 @@ def bash_pipe(*commands: str, cwd: Path | None = None, env: dict[str, str] | Non
 
 
 def bash_check(command: str, *, cwd: Path | None = None, env: dict[str, str] | None = None) -> bool:
-    _check_no_pipe(command)
+    _check_no_shell_operator(command)
     args = _resolve_args(command)
     result = subprocess.run(args, cwd=str(cwd) if cwd else None, env=_merge_env(env), capture_output=True)
     return result.returncode == 0
 
 
 def bash_check_stream(command: str, *, cwd: Path | None = None, env: dict[str, str] | None = None) -> bool:
-    _check_no_pipe(command)
+    _check_no_shell_operator(command)
     args = _resolve_args(command)
     result = subprocess.run(args, cwd=str(cwd) if cwd else None, env=_merge_env(env))
     return result.returncode == 0
 
 
 def bash_no_raise(command: str, *, cwd: Path | None = None, env: dict[str, str] | None = None) -> None:
-    _check_no_pipe(command)
+    _check_no_shell_operator(command)
     args = _resolve_args(command)
     subprocess.run(args, cwd=str(cwd) if cwd else None, env=_merge_env(env))
 
 
 def bash_handoff(command: str, *, cwd: Path | None = None, env: dict[str, str] | None = None) -> NoReturn:
+    _check_no_shell_operator(command)
     args = _resolve_args(command)
 
     if cwd:

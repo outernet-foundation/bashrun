@@ -173,3 +173,50 @@ class TestEnv:
     def test_env_overrides_inherited_value(self, monkeypatch: pytest.MonkeyPatch):
         monkeypatch.setenv("COLLIDE_VAR", "old")
         assert bash_output("printenv COLLIDE_VAR", env={"COLLIDE_VAR": "new"}) == "new\n"
+
+
+class TestShellOperatorRejection:
+    def test_accepts_plain_command(self):
+        assert bash_check("true")
+
+    def test_rejects_logical_and(self):
+        with pytest.raises(ValueError, match="shell operator"):
+            bash_check("true && false")
+
+    def test_rejects_logical_or(self):
+        with pytest.raises(ValueError, match="shell operator"):
+            bash_check("false || true")
+
+    def test_rejects_pipe(self):
+        with pytest.raises(ValueError, match="shell operator"):
+            bash_check("true | false")
+
+    def test_rejects_sequence(self):
+        with pytest.raises(ValueError, match="shell operator"):
+            bash_check("true ; false")
+
+    def test_rejects_background_ampersand(self):
+        with pytest.raises(ValueError, match="shell operator"):
+            bash_check("true &")
+
+    def test_rejects_input_redirection(self):
+        with pytest.raises(ValueError, match="shell operator"):
+            bash_check("true < /dev/null")
+
+    def test_rejects_output_redirection(self):
+        with pytest.raises(ValueError, match="shell operator"):
+            bash_check("true > /dev/null")
+
+    def test_rejects_backtick_substitution(self):
+        with pytest.raises(ValueError, match="shell operator"):
+            bash_check("true `echo arg`")
+
+    def test_ignores_operator_inside_single_quotes(self):
+        assert bash_check("true 'a && b'")
+
+    def test_ignores_operator_inside_double_quotes(self):
+        assert bash_check('true "a && b"')
+
+    def test_rejects_operator_outside_quotes_when_quotes_also_present(self):
+        with pytest.raises(ValueError, match="shell operator"):
+            bash_check('true "safe" && rm -rf /')
