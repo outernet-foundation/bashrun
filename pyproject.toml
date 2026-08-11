@@ -17,6 +17,8 @@ packages = ["src/bashrun"]
 include = ["src/bashrun/py.typed"]
 
 [tool.basedpyright]
+venvPath = "."
+venv = ".venv"
 typeCheckingMode = "strict"
 include = ["src", "tests"]
 
