@@ -6,7 +6,11 @@ import tempfile
 from pathlib import Path
 
 import pytest
-from bashrun import bash, bash_check, bash_check_stream, bash_no_raise, bash_output
+from bashrun import CalledProcessError, bash, bash_check, bash_check_stream, bash_no_raise, bash_output
+
+
+def test_exports_called_process_error() -> None:
+    assert CalledProcessError is subprocess.CalledProcessError
 
 
 class TestBashOutput:
