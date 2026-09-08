@@ -2,7 +2,7 @@
 
 Guardrailed shell-exec helpers for Python. A thin, zero-dependency layer over `subprocess` that closes the sharp edges: quoted arguments are parsed with `shlex`, shell operators like `|`, `||`, `&&`, `;`, `&`, `<`, `>`, and backtick command substitution are rejected in single-command helpers (a separate `bash_pipe()` handles real pipelines), `KeyboardInterrupt` waits for the child to exit cleanly instead of leaving it orphaned, and failure paths raise `CalledProcessError` with `stdout` and `stderr` attached rather than a bare non-zero return code. On Windows, executables are resolved against `PATH` up front so a missing binary fails with a clear `FileNotFoundError`, not `WinError 2`.
 
-The helpers form one small vocabulary — `bash`, `bash_output`, `bash_check`, `bash_check_stream`, `bash_no_raise`, `bash_pipe`, `bash_handoff` — each covering a specific failure-and-output shape. See the module docstring conventions in [`AGENTS.md`](./AGENTS.md) for which helper to reach for.
+The helpers form one small vocabulary — `bash`, `bash_output`, `bash_check`, `bash_check_stream`, `bash_no_raise`, `bash_pipe`, `bash_handoff` — each covering a specific failure-and-output shape, with `CalledProcessError` re-exported for consumers that need to catch the failure type. See the module docstring conventions in [`AGENTS.md`](./AGENTS.md) for which helper to reach for.
 
 ## Setup
 

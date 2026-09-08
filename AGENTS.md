@@ -16,7 +16,7 @@ The package is `bashrun` (src-layout under `src/bashrun/`); consumer repos decla
   - `bash_no_raise(command)` — streams output; never raises regardless of exit code. The rare shape for fire-and-continue.
   - `bash_pipe(cmd1, cmd2, ...)` — runs a real shell pipeline by chaining child processes' stdio in Python; each intermediate's stderr is discarded, the final's is preserved. This is why `bash`/`bash_output` reject `|`: pipelines have their own helper.
   - `bash_handoff(command)` — `os.execvpe`s into the child (Windows falls back to `subprocess.run` + `sys.exit`). The current process is replaced; no return.
-- `__init__.py` — re-exports the seven names.
+- `__init__.py` — re-exports the seven helper names plus `CalledProcessError` (the type `bash`/`bash_output` raise on failure), so consumers can catch the wrapper's own failure shape without importing `subprocess` themselves; it joins `bash.py` inside the `# ruff: noqa: S404` wrapper boundary.
 
 ## Constraints
 
