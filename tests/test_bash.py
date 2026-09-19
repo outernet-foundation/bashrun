@@ -9,10 +9,6 @@ import pytest
 from bashrun import CalledProcessError, bash, bash_check, bash_check_stream, bash_no_raise, bash_output
 
 
-def test_exports_called_process_error() -> None:
-    assert CalledProcessError is subprocess.CalledProcessError
-
-
 class TestBashOutput:
     def test_captures_stdout(self):
         assert bash_output("echo hello") == "hello\n"
@@ -224,3 +220,12 @@ class TestShellOperatorRejection:
     def test_rejects_operator_outside_quotes_when_quotes_also_present(self):
         with pytest.raises(ValueError, match="shell operator"):
             bash_check('true "safe" && rm -rf /')
+
+
+class TestReExports:
+    def test_called_process_error_is_the_subprocess_exception(self):
+        assert CalledProcessError is subprocess.CalledProcessError
+
+    def test_raised_errors_are_catchable_via_the_re_export(self):
+        with pytest.raises(CalledProcessError):
+            bash_output("false")
