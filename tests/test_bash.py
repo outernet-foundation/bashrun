@@ -6,7 +6,15 @@ import tempfile
 from pathlib import Path
 
 import pytest
-from bashrun import CalledProcessError, bash, bash_check, bash_check_stream, bash_no_raise, bash_output
+from bashrun import (
+    CalledProcessError,
+    bash,
+    bash_check,
+    bash_check_stream,
+    bash_no_raise,
+    bash_output,
+    first_stderr_line,
+)
 
 
 class TestBashOutput:
@@ -229,3 +237,21 @@ class TestReExports:
     def test_raised_errors_are_catchable_via_the_re_export(self):
         with pytest.raises(CalledProcessError):
             bash_output("false")
+
+
+class TestFirstStderrLine:
+    def test_returns_first_non_empty_line(self):
+        error = CalledProcessError(1, "git fetch", stderr="hint: update your remote\nfatal: not found\n")
+        assert first_stderr_line(error) == "hint: update your remote"
+
+    def test_strips_surrounding_whitespace(self):
+        error = CalledProcessError(1, "git fetch", stderr="  fatal: boom  \n")
+        assert first_stderr_line(error) == "fatal: boom"
+
+    def test_falls_back_to_exception_text_without_stderr(self):
+        error = CalledProcessError(1, "git fetch")
+        assert first_stderr_line(error) == str(error)
+
+    def test_falls_back_when_stderr_is_whitespace_only(self):
+        error = CalledProcessError(1, "git fetch", stderr=" \n \n")
+        assert first_stderr_line(error) == str(error)

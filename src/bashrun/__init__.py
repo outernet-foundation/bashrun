@@ -7,6 +7,7 @@ from .bash import (
     bash_no_raise,
     bash_output,
     bash_pipe,
+    first_stderr_line,
 )
 
 __all__ = [
@@ -18,4 +19,5 @@ __all__ = [
     "bash_no_raise",
     "bash_output",
     "bash_pipe",
+    "first_stderr_line",
 ]

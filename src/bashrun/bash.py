@@ -190,3 +190,7 @@ def bash_handoff(command: str, *, cwd: Path | None = None, env: dict[str, str] |
         except subprocess.CalledProcessError as error:
             sys.exit(error.returncode)
         sys.exit(0)
+
+
+def first_stderr_line(error: CalledProcessError) -> str:
+    return next((line.strip() for line in (error.stderr or "").splitlines() if line.strip()), str(error))
