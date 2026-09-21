@@ -32,6 +32,9 @@ jobs:
       - name: Test
         run: uv run pytest
 
+      - name: Ruff config drift
+        run: uvx --from python-devkit==0.1.2 sync-ruff --check
+
   publish:
     needs: check
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
