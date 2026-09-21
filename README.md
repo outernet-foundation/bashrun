@@ -26,17 +26,14 @@ bash("make", env={"CC": "clang"})  # env overlays the inherited environment for 
 
 ## Consuming from another repo
 
-git-reference the package from your own `pyproject.toml`:
+Install from PyPI:
 
 ```toml
 [project]
-dependencies = ["bashrun"]
-
-[tool.uv.sources]
-bashrun = { git = "https://github.com/outernet-foundation/bashrun.git", rev = "<pin-a-commit-sha>" }
+dependencies = ["bashrun>=0.1.0"]
 ```
 
-Then `from bashrun import ...` works from that repo.
+To test an unreleased change, pin the repo at a git ref in a scratch branch instead (`bashrun = { git = "https://github.com/outernet-foundation/bashrun.git", rev = "<sha>" }` under `[tool.uv.sources]`) and drop the pin when the release lands.
 
 ## Development
 

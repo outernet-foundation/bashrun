@@ -4,7 +4,7 @@
 
 `bashrun` is a zero-dependency Python wrapper around `subprocess` that closes the sharp edges a plain `subprocess.run` leaves open: quoted arguments are `shlex`-parsed so `bash_output("echo 'hello world'")` behaves the way it reads; shell operators (`|`, `||`, `&&`, `;`, `&`, `<`, `>`, backtick) are rejected in single-command helpers so a caller can't silently rely on shell expansion that isn't happening; `KeyboardInterrupt` waits up to five seconds for the child to exit before killing it, so Ctrl+C isn't swallowed and children aren't orphaned; failure paths raise `CalledProcessError` with `stdout` and `stderr` attached rather than a bare non-zero return code; and on Windows, `PATH` resolution happens up front so a missing executable fails with `FileNotFoundError` instead of the platform's `WinError 2`.
 
-The package is `bashrun` (src-layout under `src/bashrun/`); consumer repos declare a git source in `[tool.uv.sources]` and import from it directly.
+The package is `bashrun` (src-layout under `src/bashrun/`); consumer repos declare it as a registry dependency (`bashrun>=0.1.0`) once published, and a git source pin only in scratch branches testing unreleased changes.
 
 ## Shape
 
@@ -32,6 +32,10 @@ The package is `bashrun` (src-layout under `src/bashrun/`); consumer repos decla
 **Wheel must ship `py.typed`.** The package is typed and consumers expect strict-mode-friendly imports. A real hatch-built wheel omits non-Python files unless `[tool.hatch.build.targets.wheel] include` names them; drop the `py.typed` entry from `pyproject.toml` and downstream basedpyright/mypy silently treat the package as untyped.
 
 **The module-level `# ruff: noqa: S404, S603` in `bash.py` stays.** This package *is* the subprocess wrapper — importing and calling `subprocess` unsafely is its whole job. The suppression is the wrapper boundary (case 1 in the shared "fix warnings; suppress only under a wrapped or tracked exception" rule): every `subprocess` usage lives inside this one file, and the header declares it as the sanctioned suppression site so audits don't have to reason about each call individually.
+
+## Release flow
+
+Publishing rides `ci.yml`'s `publish` job on every push to `main` (gated on the check job): pubpkg — invoked uvx-isolated from a pinned git ref, never a project dependency (bashrun sits inside pubpkg's own dependency graph; a project-level pubpkg edge is a resolver cycle) — computes the plan from the tag ledger and path-diff, patches the version ephemerally, and publishes to PyPI under OIDC trusted publishing (pending publisher bound to `ci.yml`, no environment). The committed `pyproject.toml` version is permanently the `0.0.0.dev0` sentinel; the `bashrun-v*` tags are the version ledger (first release `0.1.0`, patch-auto thereafter). API-breaking changes ship with a manually bumped version — patch-auto assumes additive changes.
 
 ## See also
 
