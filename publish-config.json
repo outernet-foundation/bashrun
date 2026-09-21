@@ -1,0 +1,11 @@
+{
+  "packages": [
+    {
+      "name": "bashrun",
+      "path": ".",
+      "feeds": { "pypi": "bashrun" }
+    }
+  ],
+  "ci_workflow": "ci.yml",
+  "mirror_prefix": "ghcr.io/outernet-foundation/mirror"
+}
