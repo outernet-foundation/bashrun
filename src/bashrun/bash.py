@@ -1,4 +1,4 @@
-# ruff: noqa: S404, S603, S606, T201, PLW0717, PLW1510 — this module is the project's subprocess wrapper
+# ruff: noqa: S404, S603, S606, T201, PLC0414, PLW0717, PLW1510 — this module is the project's subprocess wrapper (PLC0414: the same-name alias is pyright's explicit-re-export idiom for CalledProcessError)
 import os
 import re
 import shlex
@@ -7,7 +7,7 @@ import subprocess
 import sys
 from contextlib import ExitStack
 from pathlib import Path
-from subprocess import CalledProcessError, Popen, TimeoutExpired
+from subprocess import CalledProcessError as CalledProcessError, Popen, TimeoutExpired
 from typing import NoReturn
 
 
