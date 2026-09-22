@@ -6,7 +6,7 @@ import tempfile
 from pathlib import Path
 
 import pytest
-from bashrun import (
+from bashrun.bash import (
     CalledProcessError,
     bash,
     bash_check,
@@ -67,7 +67,7 @@ class TestBash:
                 [
                     sys.executable,
                     "-c",
-                    f"from pathlib import Path; from bashrun import bash; bash('pwd', cwd=Path('{tmpdir}'))",
+                    f"from pathlib import Path; from bashrun.bash import bash; bash('pwd', cwd=Path('{tmpdir}'))",
                 ],
                 capture_output=True,
                 text=True,
@@ -76,7 +76,7 @@ class TestBash:
 
     def test_passes_stdin_text(self):
         result = subprocess.run(
-            [sys.executable, "-c", "from bashrun import bash; bash('cat', stdin_text='streamed input')"],
+            [sys.executable, "-c", "from bashrun.bash import bash; bash('cat', stdin_text='streamed input')"],
             capture_output=True,
             text=True,
         )
@@ -137,7 +137,7 @@ class TestBashNoRaise:
 class TestBashHandoff:
     def test_stdout_contains_output(self):
         result = subprocess.run(
-            [sys.executable, "-c", "from bashrun import bash_handoff; bash_handoff('echo handoff_test')"],
+            [sys.executable, "-c", "from bashrun.bash import bash_handoff; bash_handoff('echo handoff_test')"],
             capture_output=True,
             text=True,
         )
@@ -145,7 +145,7 @@ class TestBashHandoff:
 
     def test_exit_code_matches(self):
         result = subprocess.run(
-            [sys.executable, "-c", "from bashrun import bash_handoff; bash_handoff('sh -c \"exit 42\"')"],
+            [sys.executable, "-c", "from bashrun.bash import bash_handoff; bash_handoff('sh -c \"exit 42\"')"],
             capture_output=True,
             text=True,
         )
@@ -157,7 +157,7 @@ class TestBashHandoff:
                 [
                     sys.executable,
                     "-c",
-                    f"from pathlib import Path; from bashrun import bash_handoff; bash_handoff('pwd', cwd=Path('{tmpdir}'))",
+                    f"from pathlib import Path; from bashrun.bash import bash_handoff; bash_handoff('pwd', cwd=Path('{tmpdir}'))",
                 ],
                 capture_output=True,
                 text=True,
