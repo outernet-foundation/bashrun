@@ -6,6 +6,7 @@
 target-version = "py313"
 line-length = 120
 preview = true
+required-version = ">=0.14.11"
 
 [lint]
 select = ["ALL"]
