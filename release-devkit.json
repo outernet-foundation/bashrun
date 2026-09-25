@@ -4,7 +4,9 @@
       "name": "bashrun",
       "path": ".",
       "major_minor": "0.1",
-      "feeds": { "pypi": "bashrun" }
+      "registries": {
+        "pypi": "bashrun"
+      }
     }
   ],
   "ci_workflow": "ci.yml"
