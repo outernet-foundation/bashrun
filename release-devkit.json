@@ -1,13 +1,10 @@
 {
-  "packages": [
-    {
-      "name": "bashrun",
+  "packages": {
+    "bashrun": {
       "path": ".",
       "major_minor": "0.1",
-      "registries": {
-        "pypi": "bashrun"
-      }
+      "registries": { "pypi": "bashrun" }
     }
-  ],
+  },
   "ci_workflow": "ci.yml"
 }
