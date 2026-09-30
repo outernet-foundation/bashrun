@@ -17,7 +17,7 @@ permissions:
   contents: read
 
 env:
-  RELEASE_DEVKIT_VERSION: 0.1.25
+  RELEASE_DEVKIT_SHA: 3cc368eb6a612f305cad438319252d7142b8699b
 
 jobs:
   check:
@@ -34,8 +34,16 @@ jobs:
           enable-cache: true
       - run: uv lock --check --project tools/devkit
       - run: uv run --project tools/devkit preflight-python
-      - shell: bash
-        run: uvx --from release-devkit==${{ env.RELEASE_DEVKIT_VERSION }} publish-stable --dry-run
+      - uses: actions/checkout@v5
+        with:
+          repository: outernet-foundation/release-devkit
+          ref: ${{ env.RELEASE_DEVKIT_SHA }}
+          path: .release-devkit
+          persist-credentials: false
+      - uses: ./.release-devkit/.github/actions/publish-stable
+        with:
+          dry-run: true
+          checkout: false
 
   ensure-release-pr:
     if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
@@ -43,17 +51,14 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    env:
-      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v5
         with:
-          fetch-depth: 0
-          fetch-tags: true
+          repository: outernet-foundation/release-devkit
+          ref: ${{ env.RELEASE_DEVKIT_SHA }}
+          path: .release-devkit
           persist-credentials: false
-      - uses: astral-sh/setup-uv@v7
-      - shell: bash
-        run: uvx --from release-devkit==${{ env.RELEASE_DEVKIT_VERSION }} ensure-release-pr
+      - uses: ./.release-devkit/.github/actions/ensure-release-pr
 
   publish-stable:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -62,19 +67,14 @@ jobs:
     permissions:
       contents: write
       id-token: write
-    env:
-      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: main
-          fetch-depth: 0
-          fetch-tags: true
-      - uses: astral-sh/setup-uv@v7
-      - shell: bash
-        run: uvx --from release-devkit==${{ env.RELEASE_DEVKIT_VERSION }} publish-stable
-        env:
-          NPM_CONFIG_LOGLEVEL: verbose
+          repository: outernet-foundation/release-devkit
+          ref: ${{ env.RELEASE_DEVKIT_SHA }}
+          path: .release-devkit
+          persist-credentials: false
+      - uses: ./.release-devkit/.github/actions/publish-stable
 
   publish-dev:
     if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
@@ -84,16 +84,11 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    env:
-      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v5
         with:
-          fetch-depth: 0
-          fetch-tags: true
+          repository: outernet-foundation/release-devkit
+          ref: ${{ env.RELEASE_DEVKIT_SHA }}
+          path: .release-devkit
           persist-credentials: false
-      - uses: astral-sh/setup-uv@v7
-      - shell: bash
-        run: uvx --from release-devkit==${{ env.RELEASE_DEVKIT_VERSION }} publish-dev
-        env:
-          NPM_CONFIG_LOGLEVEL: verbose
+      - uses: ./.release-devkit/.github/actions/publish-dev

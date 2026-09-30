@@ -1,4 +1,3 @@
-requires: ">=0.1"
 ci_workflow: ci-cd.yml
 packages:
   bashrun:
