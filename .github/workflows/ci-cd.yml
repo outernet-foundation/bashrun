@@ -7,8 +7,6 @@ on:
   pull_request:
     branches: [dev]
 
-# Cancel superseded runs on the same branch, except main — where publish-stable
-# must never die mid-release (overlapping release merges queue instead).
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
@@ -20,7 +18,7 @@ env:
   RELEASE_DEVKIT_SHA: 3cc368eb6a612f305cad438319252d7142b8699b
 
 jobs:
-  check:
+  preflight:
     if: github.ref != 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
@@ -78,7 +76,7 @@ jobs:
 
   publish-dev:
     if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
-    needs: [check]
+    needs: [preflight]
     runs-on: ubuntu-latest
     environment: release
     permissions:
