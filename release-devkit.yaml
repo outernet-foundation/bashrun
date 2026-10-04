@@ -1,4 +1,4 @@
-ci_workflow: ci-cd.yml
+ci_workflow: release.yml
 packages:
   bashrun:
     path: .
