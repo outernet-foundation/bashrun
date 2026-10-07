@@ -43,6 +43,15 @@ def _merge_env(env: dict[str, str] | None) -> dict[str, str] | None:
     return {**os.environ, **env} if env else None
 
 
+def _encode_stdin(stdin_text: str | None) -> bytes | None:
+    # Not text=True: that wraps stdin in a TextIOWrapper with newline=None, which rewrites every
+    # \n to os.linesep on write. On Windows the child then reads \r\n, and anything parsing
+    # line-oriented input sees a trailing \r on every record -- `git update-index --index-info`
+    # rejects all of them as invalid paths, for instance. Writing bytes sends exactly what the
+    # caller composed, on every platform.
+    return stdin_text.encode() if stdin_text is not None else None
+
+
 def bash_output(
     command: str, *, cwd: Path | None = None, stdin_text: str | None = None, env: dict[str, str] | None = None
 ) -> str:
@@ -56,10 +65,9 @@ def bash_output(
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         stdin=subprocess.PIPE if stdin_text else None,
-        text=True,
     ) as process:
         try:
-            stdout, stderr = process.communicate(input=stdin_text)
+            raw_stdout, raw_stderr = process.communicate(input=_encode_stdin(stdin_text))
         except KeyboardInterrupt:
             try:
                 process.wait(timeout=5)
@@ -67,12 +75,15 @@ def bash_output(
                 process.kill()
             raise
 
+        stdout = raw_stdout.decode(errors="replace") if raw_stdout else ""
+        stderr = raw_stderr.decode(errors="replace") if raw_stderr else ""
+
         if process.returncode != 0:
             if stderr:
                 print(stderr, file=sys.stderr, end="")
             raise CalledProcessError(process.returncode, command, output=stdout, stderr=stderr)
 
-        return stdout or ""
+        return stdout
 
 
 def bash(
@@ -102,12 +113,11 @@ def bash(
                 stdout=stdout,
                 stderr=stderr,
                 stdin=subprocess.PIPE if stdin_text else None,
-                text=True,
             )
         )
 
         try:
-            process.communicate(input=stdin_text)
+            process.communicate(input=_encode_stdin(stdin_text))
         except KeyboardInterrupt:
             try:
                 process.wait(timeout=5)
