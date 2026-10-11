@@ -15,25 +15,10 @@ jobs:
     if: github.ref == 'refs/heads/dev'
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       id-token: write
     steps:
-      - uses: actions/checkout@v5
-        with:
-          # Perform a full clone, required for tags
-          fetch-depth: 0
-          fetch-tags: true
-          persist-credentials: false
-      - &uv-restore
-        uses: astral-sh/setup-uv@v7
-        with:
-          enable-cache: true
-          save-cache: "false"
-      - &setup-release-devkit
-        uses: ./.github/actions/setup-release-devkit
-      - run: uv run --project "$RUNNER_TEMP/release-devkit" --locked --no-dev prerelease
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+      - uses: outernet-foundation/github-actions-toolkit/.github/actions/release@84b0e14edae6af010d2b4ca1ca227c9fc64e3c50
 
   release:
     if: github.ref == 'refs/heads/main'
@@ -42,15 +27,6 @@ jobs:
       contents: write
       id-token: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: outernet-foundation/github-actions-toolkit/.github/actions/release@84b0e14edae6af010d2b4ca1ca227c9fc64e3c50
         with:
-          # Perform a full clone, required for tags
-          fetch-depth: 0
-          fetch-tags: true
-          # Persist credentials so that the release command can push release tags
-          persist-credentials: true
-      - *uv-restore
-      - *setup-release-devkit
-      - run: uv run --project "$RUNNER_TEMP/release-devkit" --locked --no-dev release
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+          stable: true

@@ -1,7 +1,6 @@
-ci_workflow: release.yml
 packages:
   bashrun:
     path: .
-    major_minor: "0.5"
-    registries:
-      pypi: bashrun
+    major_minor: "0.6"
+    registry: pypi
+    identity: bashrun

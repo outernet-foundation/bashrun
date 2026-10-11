@@ -38,21 +38,7 @@ dependencies = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "python-devkit", specifier = "==0.1.15" }]
-
-[[package]]
-name = "ci-devkit"
-version = "0.1.13"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "bashrun" },
-    { name = "pydantic" },
-    { name = "pydantic-settings" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/0c/c3/4fa23868b52713a8ed871334fb12f3473cc9f8778d8c09ef5b57aa7f5ff0/ci_devkit-0.1.13.tar.gz", hash = "sha256:8b750c1f0b953bc045e206a5a39093f3cde824b2f3dfdc5d3810d55372c3da4f", size = 40536, upload-time = "2026-09-28T07:48:31.116Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/6a/9a/388cc8375cb2bab3c1cbb9d7d96eb5abb951a4b037aafbf3c88d4c02cae3/ci_devkit-0.1.13-py3-none-any.whl", hash = "sha256:7b08f1b21691e3855b7747e060e1bc6e441664386ba346093bd14bd5327cffdd", size = 25686, upload-time = "2026-09-28T07:48:30.104Z" },
-]
+requires-dist = [{ name = "python-devkit", specifier = ">=0.3.0.dev0" }]
 
 [[package]]
 name = "colorama"
@@ -156,20 +142,6 @@ wheels = [
 ]
 
 [[package]]
-name = "pydantic-settings"
-version = "2.15.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "pydantic" },
-    { name = "python-dotenv" },
-    { name = "typing-inspection" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/68/ca/31c57507b13119d7d3cfa1576dad2911a4861e3be07b579395f4e9d393f9/pydantic_settings-2.15.0.tar.gz", hash = "sha256:694b793e84f766ba76a90ebdefc01d0a9a045dab0382bee70393da93712ad117", size = 261253, upload-time = "2026-08-07T09:24:57.419Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/30/a4/2bffa9f8e804325a09867f0e9d30795c80ea9f8d62560bd1b6ad6220eb2f/pydantic_settings-2.15.0-py3-none-any.whl", hash = "sha256:0ba092c291c94baceb5eff768aa0d56400a457585bc0175925a5a5510303da42", size = 69413, upload-time = "2026-08-07T09:24:55.839Z" },
-]
-
-[[package]]
 name = "pygments"
 version = "2.21.0"
 source = { registry = "https://pypi.org/simple" }
@@ -180,26 +152,16 @@ wheels = [
 
 [[package]]
 name = "python-devkit"
-version = "0.1.15"
+version = "0.3.0.dev38096025533"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "bashrun" },
-    { name = "ci-devkit" },
     { name = "pydantic" },
     { name = "typer" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/82/53/c3b37f69c35475b09cdf1c18deb193238d7ab5143ee6bc97e5c22c48fe87/python_devkit-0.1.15.tar.gz", hash = "sha256:ac1ef0f2a4622e9c97763f4e353005c41164e2d6d4b130cdb709e811947f253d", size = 34651, upload-time = "2026-09-30T04:12:18.88Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/85/07/160d8d87f184c1f9a32e2dd64a413695d10dad275d1684f89728d28c543c/python_devkit-0.3.0.dev38096025533.tar.gz", hash = "sha256:94b6f3d63b9192ede7d4bff2a3fabcc714a202807e2a7468c0047920837bb657", size = 33112, upload-time = "2026-10-10T23:47:13.476Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b6/81/da4f76cbfccb5a4d5a58a9f51d3e2b7d40f6dc9edd931d7891b2789adeae/python_devkit-0.1.15-py3-none-any.whl", hash = "sha256:0c13684cc780e3ba9b3e25feed61065b355e8fc7436bee043e7c6adf71fa40e7", size = 14537, upload-time = "2026-09-30T04:12:17.918Z" },
-]
-
-[[package]]
-name = "python-dotenv"
-version = "1.2.3"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/6a/53/ed9d74092561d4b01a2ef1349d52cdbc135e526c245f366b089cfca6de49/python_dotenv-1.2.3.tar.gz", hash = "sha256:a20a594dabeaa385725aa239d5244871c143ecb356add8a20fcf23773a6c3a35", size = 58945, upload-time = "2026-08-16T16:54:54.067Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/0d/17/c5c6b53ddc18f297992099b3d9ec16c855c0ccc83263a21fe4d1c625ec6c/python_dotenv-1.2.3-py3-none-any.whl", hash = "sha256:904552145e8bfed22162c09dab1c2b9b54fefa7b23ba780f4f26ca0316b0f0d9", size = 22780, upload-time = "2026-08-16T16:54:52.473Z" },
+    { url = "https://files.pythonhosted.org/packages/12/66/c87d7ab58ba1ded58dfb21fe0c9783231d7a67514fd335239bd95df58414/python_devkit-0.3.0.dev38096025533-py3-none-any.whl", hash = "sha256:605aeabb81770f6393e771518639512fd6a7c39b5a22554dfe747fd9de3a0205", size = 14633, upload-time = "2026-10-10T23:47:12.49Z" },
 ]
 
 [[package]]
