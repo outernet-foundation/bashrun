@@ -18,7 +18,7 @@ jobs:
       contents: write
       id-token: write
     steps:
-      - uses: outernet-foundation/github-actions-toolkit/.github/actions/release@decae45a7f5044695cabf9a2ad2913dfe6d239ce
+      - uses: outernet-foundation/github-actions-toolkit/.github/actions/release@feef989f2573cf383895aeb6da9dbccd61b189f7
 
   release:
     if: github.ref == 'refs/heads/main'
@@ -27,6 +27,6 @@ jobs:
       contents: write
       id-token: write
     steps:
-      - uses: outernet-foundation/github-actions-toolkit/.github/actions/release@decae45a7f5044695cabf9a2ad2913dfe6d239ce
+      - uses: outernet-foundation/github-actions-toolkit/.github/actions/release@feef989f2573cf383895aeb6da9dbccd61b189f7
         with:
           stable: true
