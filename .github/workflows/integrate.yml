@@ -14,11 +14,11 @@ permissions:
 
 jobs:
   preflight:
-    uses: outernet-foundation/github-actions-toolkit/.github/workflows/preflight.yml@decae45a7f5044695cabf9a2ad2913dfe6d239ce
+    uses: outernet-foundation/github-actions-toolkit/.github/workflows/preflight.yml@feef989f2573cf383895aeb6da9dbccd61b189f7
 
   update-pr-draft-release:
     needs: [preflight]
     permissions:
       contents: write
       packages: read
-    uses: outernet-foundation/github-actions-toolkit/.github/workflows/update-pr-draft-release.yml@decae45a7f5044695cabf9a2ad2913dfe6d239ce
+    uses: outernet-foundation/github-actions-toolkit/.github/workflows/update-pr-draft-release.yml@feef989f2573cf383895aeb6da9dbccd61b189f7
