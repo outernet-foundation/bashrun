@@ -1,6 +1,6 @@
 packages:
   bashrun:
     path: .
-    major_minor: "0.7"
+    major_minor: "0.8"
     registry: pypi
     identity: bashrun
